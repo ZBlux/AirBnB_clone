@@ -8,16 +8,30 @@ from datetime import datetime
 class BaseModel:
     """main class for AirBnB clone"""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         __init__ : initializes a new instance of basemodel class
+        Parameters:
+            *args: arg list. not used
+            **kwargs: used to set attributes on the instance.
         attributes:
-            id (str): a unique UUID string for each inst
+            id (str): a unique UUID string for each inst set if kwargs empty
             create_at: current datetime when an inst is created
             updated_at: current datetime when an inst is updated
         """
-        self.id = str(uuid.uuid4())
-        self.created_at = self.updated_at = datetime.now()
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != '__class__':
+                    if key in ['created_at', 'update_at']:
+                        value = date.time.strptime(
+                                value, '%Y-%m-%dT%H:%M:%S.%f'
+                                )
+                        setattr(self, key, value)
+                    else:
+                        setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = self.updated_at = datetime.now()
 
     def __str__(self):
         """
@@ -25,7 +39,9 @@ class BaseModel:
         Return:
             a string representation of the BaseModel instance
         """
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(
+                self.__class__.__name__, self.id, self.__dict__
+                )
 
     def save(self):
         """
