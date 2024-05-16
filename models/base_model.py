@@ -23,7 +23,7 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key != '__class__':
                     if key in ['created_at', 'update_at']:
-                        value = date.time.strptime(
+                        value = datetime.strptime(
                                 value, '%Y-%m-%dT%H:%M:%S.%f'
                                 )
                         setattr(self, key, value)
