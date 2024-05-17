@@ -53,7 +53,7 @@ class BaseModel:
     def to_dict(self):
         """
         to_dict method
-        Return: dictionary containing all keys/values
+        Return: a copy of dictionary containing all keys/values
                 of __dict__ of the instance
         """
         dict_copy = self.__dict__.copy()
