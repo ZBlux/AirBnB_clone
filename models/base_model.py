@@ -3,8 +3,6 @@
 
 import uuid
 from datetime import datetime
-from models import storage
-from models.engine.file_storage import FileStorage
 
 
 class BaseModel:
@@ -23,17 +21,15 @@ class BaseModel:
         """
         if kwargs:
             for key, value in kwargs.items():
-                if key != '__class__':
-                    if key in ['created_at', 'update_at']:
-                        value = datetime.strptime(
-                                value, '%Y-%m-%dT%H:%M:%S.%f'
-                                )
-                        setattr(self, key, value)
-                    else:
-                        setattr(self, key, value)
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.fromisoformat(value)
+                if key != "__class__":
+                    setattr(self, key, value)
         else:
+            from models import storage
             self.id = str(uuid.uuid4())
-            self.created_at = self.updated_at = datetime.now()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             storage.new(self)
 
     def __str__(self):
@@ -51,6 +47,7 @@ class BaseModel:
         save method: updates the public instance attribute updated_at
                     with the current datetime
         """
+        from models import storage
         self.updated_at = datetime.now()
         storage.save()
 
@@ -60,8 +57,8 @@ class BaseModel:
         Return: a copy of dictionary containing all keys/values
                 of __dict__ of the instance
         """
-        dict_copy = self.__dict__.copy()
-        dict_copy["__class__"] = self.__class__.__name__
-        dict_copy["created_at"] = dict_copy["created_at"].isoformat()
-        dict_copy["updated_at"] = dict_copy["updated_at"].isoformat()
-        return dict_copy
+        my_dict = self.__dict__.copy()
+        my_dict["__class__"] = self.__class__.__name__
+        my_dict["created_at"] = self.created_at.isoformat()
+        my_dict["updated_at"] = self.updated_at.isoformat()
+        return my_dict
