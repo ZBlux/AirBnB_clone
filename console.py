@@ -117,13 +117,8 @@ class HBNBCommand(cmd.Cmd):
             if class_name not in classes:
                 print("** class doesn't exist **")
                 return
-            print(
-                    [
-                        str(obj)
-                        for obj in storage.all().values()
-                        if isinstance(obj, classes[class_name])
-                        ]
-                    )
+            cls = classes[class_name]
+            print(cls.all())
 
     def do_update(self, arg):
         """
