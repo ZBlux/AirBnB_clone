@@ -7,6 +7,12 @@ from models.amenity import Amenity
 class TestAmenity(unittest.TestCase):
     """Test cases for Amenity class."""
 
+    def test_attributes(self):
+        """Test public class attributes."""
+        amenity = Amenity()
+        self.assertTrue(hasattr(amenity, 'name'))
+        self.assertEqual(amenity.name, "")
+
     def test_instance(self):
         """Test instantiation of Amenity class."""
         obj = Amenity()

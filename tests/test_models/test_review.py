@@ -7,6 +7,16 @@ from models.review import Review
 class TestReview(unittest.TestCase):
     """Test cases for Review class."""
 
+    def test_attributes(self):
+        """Test public class attributes."""
+        review = Review()
+        self.assertTrue(hasattr(review, 'place_id'))
+        self.assertEqual(review.place_id, "")
+        self.assertTrue(hasattr(review, 'user_id'))
+        self.assertEqual(review.user_id, "")
+        self.assertTrue(hasattr(review, 'text'))
+        self.assertEqual(review.text, "")
+
     def test_instance(self):
         """Test instantiation of Review class."""
         obj = Review()

@@ -7,6 +7,12 @@ from models.state import State
 class TestState(unittest.TestCase):
     """Test cases for State class."""
 
+    def test_attributes(self):
+        """Test public class attributes."""
+        state = State()
+        self.assertTrue(hasattr(state, 'name'))
+        self.assertEqual(state.name, "")
+
     def test_instance(self):
         """Test instantiation of State class."""
         obj = State()
