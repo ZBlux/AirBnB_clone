@@ -68,12 +68,15 @@ class HBNBCommand(cmd.Cmd):
         Print the string representation of an instance.
         """
         args = arg.split()
-        if len(args) < 2:
-            print("** instance id missing **")
+        if len(args) < 1:
+            print("** class name missing **")
             return
         class_name = args[0]
         if class_name not in classes:
             print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
             return
         key = "{}.{}".format(class_name, args[1])
         obj = storage.all().get(key)
@@ -87,7 +90,7 @@ class HBNBCommand(cmd.Cmd):
         Deletes an instance based on the class name and id.
         """
         args = arg.split()
-        if len(args) < 2:
+        if len(args) < 1:
             print("** class name missing **")
             return
         class_name = args[0]
@@ -117,8 +120,8 @@ class HBNBCommand(cmd.Cmd):
             if class_name not in classes:
                 print("** class doesn't exist **")
                 return
-            cls = classes[class_name]
-            print(cls.all())
+            print([str(obj) for key, obj in storage.all().items()
+                   if key.startswith(class_name)])
 
     def do_update(self, arg):
         """
