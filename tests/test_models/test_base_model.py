@@ -1,10 +1,12 @@
 #!/usr/bin/python3
-""" Defines unittests for models/base_model.py """
+"""Defines unittests for models/base_model.py"""
 
 import unittest
 from models.base_model import BaseModel
 from datetime import datetime
 import time
+import io
+import sys
 
 
 class TestBaseModel(unittest.TestCase):
@@ -54,10 +56,16 @@ class TestBaseModel(unittest.TestCase):
         new_updated_at = instance.updated_at
         self.assertNotEqual(old_updated_at, new_updated_at)
         self.assertGreater(new_updated_at, old_updated_at)
+
+        # Capture the output
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
         print("OK")
+        sys.stdout = sys.__stdout__
+        self.assertEqual(captured_output.getvalue().strip(), "OK")
 
     def test_create_instance_with_kwargs(self):
-        """ test creating an instance with kwargs"""
+        """Test creating an instance with kwargs."""
         now = datetime.now().isoformat()
         instance = BaseModel(id="123", created_at=now, updated_at=now)
         self.assertEqual(instance.id, "123")
