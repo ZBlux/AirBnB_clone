@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-"""Defines unittests for models/base_model.py"""
+""" Defines unittests for models/base_model.py """
 
 import unittest
 from models.base_model import BaseModel
+from datetime import datetime
+import time
 
 
 class TestBaseModel(unittest.TestCase):
@@ -24,13 +26,15 @@ class TestBaseModel(unittest.TestCase):
         self.assertTrue('id' in instance_dict)
         self.assertTrue('created_at' in instance_dict)
         self.assertTrue('updated_at' in instance_dict)
+        self.assertTrue('__class__' in instance_dict)
+        self.assertEqual(instance_dict['__class__'], 'BaseModel')
 
     def test_str_representation(self):
         """Test the __str__ method of BaseModel."""
         instance = BaseModel()
         expected_str = "[BaseModel] ({}) {}".format(
-                instance.id, instance.__dict__
-                )
+            instance.id, instance.__dict__
+        )
         self.assertEqual(str(instance), expected_str)
 
     def test_update_attributes(self):
@@ -40,6 +44,25 @@ class TestBaseModel(unittest.TestCase):
         instance.number = 123
         self.assertEqual(instance.name, "Test")
         self.assertEqual(instance.number, 123)
+
+    def test_save_method(self):
+        """Test the save method of BaseModel."""
+        instance = BaseModel()
+        old_updated_at = instance.updated_at
+        time.sleep(1)
+        instance.save()
+        new_updated_at = instance.updated_at
+        self.assertNotEqual(old_updated_at, new_updated_at)
+        self.assertGreater(new_updated_at, old_updated_at)
+        print("OK")
+
+    def test_create_instance_with_kwargs(self):
+        """ test creating an instance with kwargs"""
+        now = datetime.now().isoformat()
+        instance = BaseModel(id="123", created_at=now, updated_at=now)
+        self.assertEqual(instance.id, "123")
+        self.assertEqual(instance.created_at.isoformat(), now)
+        self.assertEqual(instance.updated_at.isoformat(), now)
 
 
 if __name__ == '__main__':
