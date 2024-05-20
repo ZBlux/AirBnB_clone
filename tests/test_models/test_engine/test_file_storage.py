@@ -9,17 +9,28 @@ from models.base_model import BaseModel
 class TestFileStorage(unittest.TestCase):
     """Test cases for FileStorage class."""
 
+    @classmethod
+    def setUpClass(cls):
+        """Set up the test environment before any test runs."""
+        cls.file_path = "test_file.json"
+        cls.storage = FileStorage()
+        cls.storage._FileStorage__file_path = cls.file_path
+
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up the test environment after all tests are run."""
+        if os.path.exists(cls.file_path):
+            os.remove(cls.file_path)
+
     def setUp(self):
-        """Set up test environment."""
-        self.file_path = "test_file.json"
-        self.storage = FileStorage()
+        """Set up for individual tests."""
         self.obj = BaseModel()
-        self.obj.save()
+        self.storage.new(self.obj)
+        self.storage.save()
 
     def tearDown(self):
-        """Clean up test environment."""
-        if os.path.exists(self.file_path):
-            os.remove(self.file_path)
+        """Clean up after individual tests."""
+        self.storage._FileStorage__objects.clear()
 
     def test_all(self):
         """Test all method of FileStorage class."""
@@ -29,11 +40,10 @@ class TestFileStorage(unittest.TestCase):
 
     def test_new(self):
         """Test new method of FileStorage class."""
-        obj_id = self.obj.id
         new_obj = BaseModel()
         self.storage.new(new_obj)
         all_objs = self.storage.all()
-        self.assertIn("BaseModel.{}".format(obj_id), all_objs)
+        self.assertIn("BaseModel.{}".format(new_obj.id), all_objs)
 
     def test_save(self):
         """Test save method of FileStorage class."""
