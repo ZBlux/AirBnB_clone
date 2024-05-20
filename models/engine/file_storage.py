@@ -1,36 +1,26 @@
 #!/usr/bin/python3
-"""
-Defines the FileStorage class
-"""
+""" Defines the FileStorage class """
+
 import json
 from models.base_model import BaseModel
-from models.user import User
 from models.state import State
 from models.city import City
-from models.place import Place
 from models.amenity import Amenity
+from models.place import Place
 from models.review import Review
 
 
 class FileStorage:
     """
-    Class that serializes instances to a JSON file and
-    deserializes JSON file to instances.
-
+    Class that serializes instances to a JSON file
+    and deserializes JSON file to instances.
     Attributes:
-        __file_path (str): The name of the file to save objects to.
-        __objects (dict): A dictionary of instantiated objects.
+        __file_path (str): name of the file to save objects to
+        __objects (dict): dictionary of instantiated objects
     """
+
     __file_path = "file.json"
-    __objects = {
-            "BaseModel": BaseModel,
-        "User": User,
-        "State": State,
-        "City": City,
-        "Amenity": Amenity,
-        "Place": Place,
-        "Review": Review
-    }
+    __objects = {}
 
     def all(self):
         """
@@ -57,14 +47,15 @@ class FileStorage:
 
     def reload(self):
         """
-        Deserialize the JSON file to __objects if it exists.
+        Deserialize the JSON file to __objects if the file exists.
         """
         try:
             with open(self.__file_path, 'r') as f:
                 objects = json.load(f)
-                for obj in objects.values():
-                    cls_name = obj["__class__"]
-                    del obj["__class__"]
-                    self.new(eval(cls_name)(**obj))
+                for key, val in objects.items():
+                    class_name = val["__class__"]
+                    del val["__class__"]
+                    cls = eval(class_name)
+                    self.__objects[key] = cls(**val)
         except FileNotFoundError:
             pass

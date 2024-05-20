@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """the console"""
 import cmd
-from models.base_model import BaseModel
 from models import storage
+from models.base_model import BaseModel
 from models.user import User
 from models.state import State
 from models.city import City
@@ -22,26 +22,34 @@ classes = {
 
 
 class HBNBCommand(cmd.Cmd):
-    """command interpreter Hbnb
-    Attributes:
-        prompt : the command prompt.
     """
+    Command interpreter for HBNB.
+    """
+
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
-        """ quit command to exit the program"""
+        """
+        Quit command to exit the program.
+        """
         return True
 
     def do_EOF(self, arg):
-        """EOF command to exit the program"""
+        """
+        EOF command to exit the program.
+        """
         return True
 
     def emptyline(self):
-        """ do nothing on empty input"""
+        """
+        Do nothing on empty input.
+        """
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of a class"""
+        """
+        Create a new instance of a class.
+        """
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -56,20 +64,18 @@ class HBNBCommand(cmd.Cmd):
         print(new_instance.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance
-            based on the class name and id
+        """
+        Print the string representation of an instance.
         """
         args = arg.split()
-        if len(args) < 1:
-            print("** class name missing **")
-            return
-        if args[0] not in classes:
-            print("** class doesn't exist **")
-            return
         if len(args) < 2:
             print("** instance id missing **")
             return
-        key = "{}.{}".format(args[0], args[1])
+        class_name = args[0]
+        if class_name not in classes:
+            print("** class doesn't exist **")
+            return
+        key = "{}.{}".format(class_name, args[1])
         obj = storage.all().get(key)
         if obj is None:
             print("** no instance found **")
