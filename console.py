@@ -3,9 +3,11 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
 
 classes = {
-    "BaseModel": BaseModel
+    "BaseModel": BaseModel,
+    "User": User
 }
 
 
@@ -30,13 +32,16 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Creates a new instance of BaseModel"""
-        if not arg:
+        args = arg.split()
+        if len(args) == 0:
             print("** class name missing **")
             return
-        if arg not in classes:
+        class_name = args[0]
+        if class_name not in self.class_map:
             print("** class doesn't exist **")
             return
-        new_instance = classes[arg]()
+        cls = self.class_map[class_name]
+        new_instance = cls()
         new_instance.save()
         print(new_instance.id)
 
