@@ -20,6 +20,7 @@ classes = {
     "Review": Review
 }
 
+
 class HBNBCommand(cmd.Cmd):
     """
     Command interpreter for HBNB.
@@ -123,6 +124,7 @@ class HBNBCommand(cmd.Cmd):
                         if isinstance(obj, classes[class_name])
                         ]
                     )
+
     def do_update(self, arg):
         """
         Updates an instance based on the class name
