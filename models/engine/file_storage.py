@@ -5,6 +5,11 @@ Defines the FileStorage class
 import json
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
@@ -17,7 +22,15 @@ class FileStorage:
         __objects (dict): A dictionary of instantiated objects.
     """
     __file_path = "file.json"
-    __objects = {}
+    __objects = {
+            "BaseModel": BaseModel,
+        "User": User,
+        "State": State,
+        "City": City,
+        "Amenity": Amenity,
+        "Place": Place,
+        "Review": Review
+    }
 
     def all(self):
         """
@@ -46,18 +59,12 @@ class FileStorage:
         """
         Deserialize the JSON file to __objects if it exists.
         """
-        class_map = {
-            "BaseModel": BaseModel,
-            "User": User
-        }
-
         try:
             with open(self.__file_path, 'r') as f:
-                objdict = json.load(f)
-                for o in objdict.values():
-                    cls_name = o.pop("__class__")
-                    cls = class_map.get(cls_name)
-                    if cls:
-                        self.new(cls(**o))
+                objects = json.load(f)
+                for obj in objects.values():
+                    cls_name = obj["__class__"]
+                    del obj["__class__"]
+                    self.new(eval(cls_name)(**obj))
         except FileNotFoundError:
             pass

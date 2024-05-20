@@ -4,10 +4,20 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 classes = {
     "BaseModel": BaseModel,
-    "User": User
+    "User": User,
+    "State": State,
+    "City": City,
+    "Amenity": Amenity,
+    "Place": Place,
+    "Review": Review
 }
 
 
@@ -31,16 +41,16 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of BaseModel"""
+        """Creates a new instance of a class"""
         args = arg.split()
         if len(args) == 0:
             print("** class name missing **")
             return
         class_name = args[0]
-        if class_name not in self.class_map:
+        if class_name not in classes:
             print("** class doesn't exist **")
             return
-        cls = self.class_map[class_name]
+        cls = classes[class_name]
         new_instance = cls()
         new_instance.save()
         print(new_instance.id)
